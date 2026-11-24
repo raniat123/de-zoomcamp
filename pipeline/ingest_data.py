@@ -62,6 +62,12 @@ def run(pg_user, pg_pass, pg_host, pg_port, pg_db, year, month, target_table, ch
 
         df_chunk.to_sql(name=target_table, con=engine, if_exists='append')
 
+   # Load the zone lookup table (265 rows, small enough for one go)
+    zones_url = 'https://github.com/DataTalksClub/nyc-tlc-data/releases/download/misc/taxi_zone_lookup.csv'
+    zones = pd.read_csv(zones_url)
+    zones.to_sql(name='zones', con=engine, if_exists='replace', index=False)
+    print(f'Loaded {len(zones)} zones')
+
 
 if __name__ == '__main__':
     run()
